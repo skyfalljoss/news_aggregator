@@ -1,0 +1,186 @@
+{% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %}Newsprint - Latest Sports News{% endblock %}
+
+{% block content %}
+<!-- Hero Carousel Section -->
+<section class="hero-carousel">
+    <div class="container">
+        <div class="carousel-container">
+            {% for article in carousel_articles %}
+            <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+                <div class="carousel-content">
+                    <div class="carousel-image">
+                        <img src="{{ article.image_url }}" alt="{{ article.title }}">
+                        <div class="category-tag">{{ article.category|upper }}</div>
+                    </div>
+                    <div class="carousel-text">
+                        <h1>{{ article.title }}</h1>
+                        <p>By {{ article.author }} • {{ article.published_date }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Carousel Controls -->
+        <div class="carousel-controls">
+            <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+            <button class="carousel-btn next" aria-label="Next slide">›</button>
+        </div>
+
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+            {% for article in carousel_articles %}
+                <span class="indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- Most Viewed Sections -->
+<section class="most-viewed">
+    <div class="container">
+        <div class="section-header">
+            <h2>Most Viewed Sections</h2>
+            <a href="{% url 'news:most_viewed_list' %}" class="view-all-link">View All</a>
+        </div>
+
+        <div class="most-viewed-grid">
+            {% for article in most_viewed_articles %}
+            <div class="most-viewed-card">
+                <div class="card-image">
+                    <a href="{% url 'news:article_detail' article.id %}">
+                        <img src="{{ article.image_url }}" alt="{{ article.title }}">
+                        <div class="category-tag">{{ article.category|upper }}</div>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <h3>
+                        <a href="{% url 'news:article_detail' article.id %}">
+                            {{ article.title }}
+                        </a>
+                    </h3>
+                    <p>By {{ article.author }} • {{ article.published_date }}</p>
+                    <div class="views">{{ article.views }} VIEWS</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+<!-- Category Sections -->
+<section class="category-sections">
+    <div class="container">
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            {% for category_name, data in categorized_articles.items %}
+                <button class="category-tab {% if forloop.first %}active{% endif %}"
+                        data-category="{{ category_name|slugify }}">
+                    {{ category_name }}
+                </button>
+            {% endfor %}
+        </div>
+
+        <!-- Category Content Sections -->
+        {% for category_name, data in categorized_articles.items %}
+        <div class="category-content {% if forloop.first %}active{% endif %}" id="{{ category_name|slugify }}">
+            <div class="content-grid">
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <div class="section-header">
+                        <h2>{{ category_name }} News</h2>
+                        <a href="{% url 'news:category_list' category_name %}" class="view-all-link">View All</a>
+                    </div>
+
+                    <div class="news-grid">
+                        {% for article in data.articles %}
+                        <article class="news-card">
+                            <div class="card-image">
+                                 <a href="{{ article.source_url }}" target="_blank" rel="noopener noreferrer">
+                                    <img src="{{ article.image_url }}" 
+                                         alt="{{ article.title }}"
+                                         onerror="this.onerror=null;this.src='https://placehold.co/400x300/eee/ccc?text=Image';">
+                                    <div class="category-tag">{{ category_name|upper }}</div>
+                                </a>
+                            </div>
+                            <div class="card-content">
+                                <h3>
+                                    <a href="{{ article.source_url }}" target="_blank" rel="noopener noreferrer" >{{ article.title }}</a>
+                                </h3>
+                                <p>{{ article.published_at|date:"F j, Y" }}</p>
+                            </div>
+                        </article>
+                        {% empty %}
+                            <p>No articles for this category.</p>
+                        {% endfor %}
+                    </div>
+
+                    <button class="btn btn-primary load-more-btn"
+                            data-category="{{ category_name|slugify }}">
+                        LOAD MORE
+                    </button>
+                </div>
+
+                <!-- Sidebar: Latest Posts -->
+                <aside class="sidebar">
+                    <div class="latest-posts">
+                        <h3>Latest Posts</h3>
+                        <div class="post-list">
+                            {% for post in data.latest_posts %}
+                            <article class="post-item">
+                                <div class="post-thumbnail">
+                                        <a href="{{ post.source_url }}" target="_blank" rel="noopener noreferrer">
+                                        <img src="{{ post.image_url }}" 
+                                             alt="{{ post.title }}"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/60x60/eee/ccc?text=...';">
+                                    </a>
+                                </div>
+                                <div class="post-content">
+                                    <h4>
+                                        <a href="{{ post.source_url }}" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
+                                    </h4>
+                                    <p>{{ post.published_at|date:"F j, Y" }}</p>
+                                </div>
+                            </article>
+                            {% empty %}
+                                <p>No recent posts.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Subscription Section -->
+<section class="subscription-section">
+    <div class="container">
+        <div class="subscription-content">
+            <h2>Stay Updated with Latest News</h2>
+            <p>Subscribe to our newsletter and never miss the latest sports updates, breaking news, and exclusive content.</p>
+            <form class="subscription-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Enter your name" required>
+                    <input type="email" placeholder="Enter your email" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Subscribe Now</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/carousel.js' %}"></script>
+<script src="{% static 'js/categories.js' %}"></script>
+{% endblock %}

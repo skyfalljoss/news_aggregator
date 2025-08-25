@@ -1,0 +1,197 @@
+{% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} - Newsprint{% endblock %}
+
+{% block content %}
+<!-- Article Detail Section -->
+<section class="article-detail">
+    <div class="container">
+        <div class="article-layout">
+            <!-- Main Article Content -->
+            <div class="main-article">
+                <!-- Article Header -->
+                <div class="article-header">
+                    <div class="category-tag">{{ article.category|upper }}</div>
+                    <h1 class="article-title">{{ article.title }}</h1>
+                    <div class="article-meta">
+                        <span class="author">by {{ article.author }}</span>
+                        <span class="date">{{ article.published_date|date:"F d, Y" }}</span>
+                        <span class="last-updated">Last Updated: {{ article.last_updated|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+
+                <!-- Article Image -->
+                <div class="article-image">
+                    <img src="{{ article.image_url|default:'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=450&fit=crop' }}" alt="{{ article.title }}">
+                </div>
+
+                <!-- Article Content -->
+                <div class="article-content">
+                    <p>{{ article.content|default:"India's batter Sarfaraz Khan on Saturday said his first test century was a 'dream come true' as he enthralled the crowd and pundits with his 150 against New Zealand. The young batsman showed exceptional technique and temperament throughout his innings, earning praise from cricket legends and fans alike." }}</p>
+                    
+                    <p>His remarkable performance came at a crucial time for the team, helping India secure a commanding position in the match. The century was not just about the runs scored, but also about the manner in which they were accumulated - with grace, determination, and a deep understanding of the game's nuances.</p>
+                    
+                    <p>The achievement marks a significant milestone in Sarfaraz's career, showcasing his potential as one of India's future batting stars. His ability to handle pressure situations and adapt to different match conditions has made him a valuable asset to the team.</p>
+                </div>
+
+                <!-- Article Actions -->
+                <div class="article-actions">
+                    <div class="action-item">
+                        <span class="action-icon">📊</span>
+                        <span class="action-text">50 VIEWS</span>
+                    </div>
+                    <div class="action-item">
+                        <button class="action-btn save-btn">
+                            <span class="action-icon">🔖</span>
+                            <span class="action-text">SAVE</span>
+                        </button>
+                    </div>
+                    <div class="action-item">
+                        <button class="action-btn share-btn">
+                            <span class="action-icon">📤</span>
+                            <span class="action-text">0 SHARE</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Social Share -->
+                <div class="social-share">
+                    <a href="#" class="social-link facebook" aria-label="Share on Facebook">f</a>
+                    <a href="#" class="social-link twitter" aria-label="Share on Twitter">🐦</a>
+                    <a href="#" class="social-link instagram" aria-label="Share on Instagram">📷</a>
+                    <a href="#" class="social-link blog" aria-label="Share on Blog">📝</a>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="article-sidebar">
+                <!-- Weather Widget -->
+                <div class="weather-widget">
+                    <div class="weather-header">
+                        <h3>DHAKA</h3>
+                    </div>
+                    <div class="weather-current">
+                        <div class="temperature">28 °C</div>
+                        <div class="condition">HAZE</div>
+                    </div>
+                    <div class="weather-forecast">
+                        <div class="forecast-item">
+                            <span class="time">06:00 PM</span>
+                            <span class="weather-icon">☁️</span>
+                            <span class="temp">28 °C</span>
+                        </div>
+                        <div class="forecast-item">
+                            <span class="time">09:00 PM</span>
+                            <span class="weather-icon">☁️</span>
+                            <span class="temp">27 °C</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular News Tabs -->
+                <div class="news-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="popular">POPULAR</button>
+                        <button class="tab-btn" data-tab="comment">COMMENT</button>
+                        <button class="tab-btn" data-tab="like">LIKE</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="popular">
+                        <div class="news-list">
+                            <article class="news-item">
+                                <h4>AUSTRALIA: SARFARAZ JOINS VES CAMP AHEAD OF CAPMO VS VELDORA</h4>
+                                <p>by HABIB, February 18, 2025</p>
+                            </article>
+                            <article class="news-item">
+                                <h4>KPMG WOMEN'S PGA CHAMPIONSHIP: MINJEE LEE CLOSES OUT THIRD MAJOR</h4>
+                                <p>by HABIB, June 23, 2025</p>
+                            </article>
+                            <article class="news-item">
+                                <h4>KSCA INVITATIONAL: TENDULKAR TAKES MATCH HAUL OF NINE WICKETS IN</h4>
+                                <p>by HABIB, February 18, 2025</p>
+                            </article>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="comment">
+                        <div class="news-list">
+                            <article class="news-item">
+                                <h4>Latest comments on sports news</h4>
+                                <p>No comments yet</p>
+                            </article>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="like">
+                        <div class="news-list">
+                            <article class="news-item">
+                                <h4>Most liked articles</h4>
+                                <p>Loading...</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- Reply Section -->
+<section class="reply-section">
+    <div class="container">
+        <div class="reply-content">
+            <h2>Leave a Reply</h2>
+            <p class="reply-note">Your email address will not be published. Required fields are marked *</p>
+            
+            <form class="reply-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Enter Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Enter Email" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="comment" name="comment" rows="6" placeholder="Write your comments....." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">SUBMIT NOW ></button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Recently Visited Section -->
+<section class="recently-visited">
+    <div class="container">
+        <div class="section-header">
+            <h2>>> Recently visited</h2>
+        </div>
+        <div class="recently-visited-grid">
+            <article class="recent-item">
+                <div class="recent-image">
+                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop" alt="Tennis Match">
+                </div>
+                <div class="recent-content">
+                    <h3>Tennis Championship: New Rising Stars</h3>
+                    <p>Latest updates from the tennis world featuring emerging talents and championship highlights.</p>
+                </div>
+            </article>
+            <article class="recent-item">
+                <div class="recent-image">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop" alt="Cricket Match">
+                </div>
+                <div class="recent-content">
+                    <h3>Cricket Season: Team Preparations</h3>
+                    <p>Insights into team strategies and player preparations for the upcoming cricket season.</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/detail.js' %}"></script>
+{% endblock %}

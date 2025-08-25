@@ -1,0 +1,309 @@
+{
+    "designSystem": {
+      "name": "Newsprint Sports Magazine Layout",
+      "version": "1.0",
+      "description": "Clean, modern sports news website with emphasis on visual storytelling and content categorization",
+      "designPrinciples": [
+        "Content-first approach",
+        "Visual hierarchy through typography and spacing",
+        "Category-based organization",
+        "Minimal color palette with strategic accent use",
+        "Mobile-responsive grid system"
+      ]
+    },
+    "layout": {
+      "structure": {
+        "header": {
+          "height": "80px",
+          "components": ["logo", "navigation", "search", "cta_button", "social_links", "date_display"],
+          "layout": "horizontal_flex",
+          "background": "white",
+          "sticky": true
+        },
+        "hero_section": {
+          "type": "featured_content_grid",
+          "layout": "asymmetric_grid",
+          "components": ["featured_articles", "category_overlays"],
+          "aspect_ratios": ["16:9", "4:3", "1:1"]
+        },
+        "content_sections": {
+          "type": "categorized_content_blocks",
+          "layout": "vertical_stack",
+          "section_types": ["most_viewed", "category_sections", "latest_posts"]
+        },
+        "sidebar": {
+          "components": ["newsletter_signup", "latest_posts_list"],
+          "width": "300px",
+          "position": "left_aligned"
+        },
+        "footer": {
+          "type": "multi_column",
+          "background": "dark",
+          "components": ["brand_description", "category_links", "trending_content"]
+        }
+      },
+      "grid": {
+        "system": "12_column",
+        "breakpoints": {
+          "mobile": "320px",
+          "tablet": "768px",
+          "desktop": "1024px",
+          "wide": "1440px"
+        },
+        "gutters": {
+          "mobile": "16px",
+          "tablet": "24px",
+          "desktop": "32px"
+        }
+      }
+    },
+    "typography": {
+      "primary_font": {
+        "family": "Inter, system-ui, sans-serif",
+        "usage": "body_text, navigation, ui_elements"
+      },
+      "display_font": {
+        "family": "Inter, system-ui, sans-serif",
+        "weight": "600-700",
+        "usage": "headings, article_titles"
+      },
+      "hierarchy": {
+        "h1": {
+          "size": "clamp(2rem, 4vw, 3.5rem)",
+          "weight": "700",
+          "line_height": "1.2",
+          "usage": "hero_headlines"
+        },
+        "h2": {
+          "size": "clamp(1.5rem, 3vw, 2.5rem)",
+          "weight": "600",
+          "line_height": "1.3",
+          "usage": "section_titles"
+        },
+        "h3": {
+          "size": "clamp(1.25rem, 2.5vw, 1.75rem)",
+          "weight": "600",
+          "line_height": "1.4",
+          "usage": "article_headlines"
+        },
+        "body": {
+          "size": "1rem",
+          "weight": "400",
+          "line_height": "1.6",
+          "usage": "content_text"
+        },
+        "caption": {
+          "size": "0.875rem",
+          "weight": "400",
+          "line_height": "1.4",
+          "usage": "metadata, dates, author_info"
+        }
+      }
+    },
+    "colorPalette": {
+      "primary": {
+        "white": "#FFFFFF",
+        "black": "#000000",
+        "usage": "main_backgrounds, primary_text"
+      },
+      "neutral": {
+        "gray_50": "#F9FAFB",
+        "gray_100": "#F3F4F6",
+        "gray_300": "#D1D5DB",
+        "gray_500": "#6B7280",
+        "gray_700": "#374151",
+        "gray_900": "#111827",
+        "usage": "secondary_text, borders, backgrounds"
+      },
+      "accent": {
+        "blue": "#3B82F6",
+        "green": "#10B981",
+        "yellow": "#F59E0B",
+        "red": "#EF4444",
+        "usage": "category_tags, highlights, interactive_elements"
+      },
+      "semantic": {
+        "success": "#10B981",
+        "warning": "#F59E0B",
+        "error": "#EF4444",
+        "info": "#3B82F6"
+      }
+    },
+    "components": {
+      "buttons": {
+        "primary": {
+          "background": "#000000",
+          "color": "#FFFFFF",
+          "padding": "12px 24px",
+          "border_radius": "6px",
+          "font_weight": "500",
+          "hover_state": "opacity_90"
+        },
+        "secondary": {
+          "background": "transparent",
+          "color": "#000000",
+          "border": "1px solid #D1D5DB",
+          "padding": "12px 24px",
+          "border_radius": "6px",
+          "font_weight": "500"
+        }
+      },
+      "cards": {
+        "article_card": {
+          "background": "#FFFFFF",
+          "border_radius": "8px",
+          "overflow": "hidden",
+          "shadow": "subtle",
+          "hover_effect": "lift_scale",
+          "components": ["image", "category_tag", "headline", "metadata"]
+        },
+        "featured_card": {
+          "background": "image_overlay",
+          "overlay_gradient": "linear_gradient_to_top",
+          "text_color": "#FFFFFF",
+          "padding": "24px",
+          "aspect_ratio": "16:9"
+        }
+      },
+      "category_tags": {
+        "style": "pill",
+        "background": "#000000",
+        "color": "#FFFFFF",
+        "padding": "4px 12px",
+        "border_radius": "12px",
+        "font_size": "0.75rem",
+        "font_weight": "500",
+        "text_transform": "uppercase",
+        "letter_spacing": "0.05em"
+      },
+      "navigation": {
+        "primary_nav": {
+          "layout": "horizontal",
+          "font_weight": "500",
+          "spacing": "32px",
+          "hover_effect": "underline",
+          "active_state": "bold"
+        },
+        "breadcrumbs": {
+          "separator": ">",
+          "color": "#6B7280",
+          "font_size": "0.875rem"
+        }
+      },
+      "forms": {
+        "input": {
+          "border": "1px solid #D1D5DB",
+          "border_radius": "6px",
+          "padding": "12px 16px",
+          "font_size": "1rem",
+          "focus_border": "#3B82F6",
+          "placeholder_color": "#9CA3AF"
+        },
+        "newsletter_signup": {
+          "layout": "vertical",
+          "background": "#F9FAFB",
+          "padding": "24px",
+          "border_radius": "12px",
+          "components": ["heading", "description", "email_input", "submit_button"]
+        }
+      },
+      "content_sections": {
+        "section_header": {
+          "layout": "flex_space_between",
+          "components": ["section_title", "view_all_link"],
+          "margin_bottom": "24px",
+          "border_bottom": "optional_subtle_line"
+        },
+        "content_grid": {
+          "type": "responsive_grid",
+          "columns": {
+            "mobile": 1,
+            "tablet": 2,
+            "desktop": 3,
+            "wide": 4
+          },
+          "gap": "24px"
+        },
+        "sidebar_list": {
+          "layout": "vertical_stack",
+          "item_spacing": "16px",
+          "components": ["thumbnail", "title", "metadata"]
+        }
+      }
+    },
+    "spacing": {
+      "scale": [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128],
+      "usage": {
+        "xs": "4px - small_gaps, padding_internal",
+        "sm": "8px - tight_spacing",
+        "md": "16px - standard_padding, margins",
+        "lg": "24px - section_spacing",
+        "xl": "32px - major_spacing",
+        "2xl": "48px - large_section_breaks",
+        "3xl": "64px - hero_spacing"
+      }
+    },
+    "imagery": {
+      "aspect_ratios": {
+        "hero": "16:9",
+        "card": "4:3",
+        "thumbnail": "1:1",
+        "wide_banner": "21:9"
+      },
+      "treatments": {
+        "overlay": "dark_gradient_overlay_for_text_readability",
+        "hover": "subtle_zoom_scale_1.05",
+        "loading": "skeleton_placeholder"
+      },
+      "optimization": {
+        "formats": ["webp", "jpg", "png"],
+        "responsive": "srcset_multiple_sizes",
+        "lazy_loading": true
+      }
+    },
+    "interactions": {
+      "hover_effects": {
+        "cards": "transform_translateY(-2px)_shadow_increase",
+        "buttons": "opacity_90_transform_scale(0.98)",
+        "links": "color_transition_underline"
+      },
+      "transitions": {
+        "duration": "200ms",
+        "easing": "ease_in_out",
+        "properties": ["transform", "opacity", "color", "background"]
+      },
+      "loading_states": {
+        "skeleton": "animated_placeholder_bars",
+        "spinner": "minimal_loading_indicator",
+        "progressive": "fade_in_content_as_loads"
+      }
+    },
+    "responsive_behavior": {
+      "mobile_first": true,
+      "breakpoint_strategy": "content_based",
+      "navigation": {
+        "mobile": "hamburger_menu",
+        "tablet": "collapsed_secondary_nav",
+        "desktop": "full_horizontal_nav"
+      },
+      "grid_adaptation": {
+        "mobile": "single_column_stack",
+        "tablet": "2_column_mixed_layout",
+        "desktop": "multi_column_with_sidebar"
+      },
+      "typography_scaling": "clamp_functions_for_fluid_scaling"
+    },
+    "accessibility": {
+      "contrast_ratios": "WCAG_AA_compliant",
+      "focus_indicators": "visible_outline_2px_offset",
+      "alt_text": "descriptive_image_alternatives",
+      "semantic_html": "proper_heading_hierarchy_landmark_elements",
+      "keyboard_navigation": "full_keyboard_accessible"
+    },
+    "performance": {
+      "images": "lazy_loading_responsive_srcset",
+      "css": "critical_css_inline_deferred_non_critical",
+      "fonts": "preload_critical_fonts_display_swap",
+      "javascript": "progressive_enhancement_minimal_blocking"
+    }
+  }

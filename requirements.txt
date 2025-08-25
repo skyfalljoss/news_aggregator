@@ -1,0 +1,6 @@
+Django
+requests
+beautifulsoup4
+PyMySQL
+cryptography
+python-dateutil
