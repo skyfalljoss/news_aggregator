@@ -16,7 +16,16 @@ class Carousel {
     }
     
     init() {
-        if (this.totalSlides <= 1) return;
+        if (this.totalSlides <= 0) {
+            console.log('No carousel slides found');
+            return;
+        }
+        
+        if (this.totalSlides === 1) {
+            // Single slide - hide controls and indicators
+            this.hideControls();
+            return;
+        }
         
         this.bindEvents();
         this.startAutoPlay();
@@ -108,6 +117,15 @@ class Carousel {
             } else {
                 indicator.classList.remove('active');
             }
+        });
+    }
+    
+    hideControls() {
+        // Hide controls and indicators for single slide
+        if (this.prevBtn) this.prevBtn.style.display = 'none';
+        if (this.nextBtn) this.nextBtn.style.display = 'none';
+        this.indicators.forEach(indicator => {
+            indicator.style.display = 'none';
         });
     }
     

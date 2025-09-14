@@ -91,31 +91,151 @@ class CategoryManager {
         const category = button.closest('.category-content').id;
         const newsGrid = button.closest('.category-content').querySelector('.news-grid');
         
+        // Get current page from button data attribute
+        const currentPage = parseInt(button.dataset.page) || 2;
+        
         // Add loading state to button
         button.classList.add('loading');
         button.textContent = 'Loading...';
         button.disabled = true;
         
-        // Simulate loading more content
-        setTimeout(() => {
-            this.addMoreNewsItems(newsGrid, category);
+        // Make AJAX request to load more articles
+        this.fetchMoreArticles(category, currentPage)
+            .then(data => {
+                if (data.success) {
+                    // Append new articles to the grid
+                    this.appendArticlesToGrid(newsGrid, data.html);
+                    
+                    // Update button state
+                    if (data.has_next) {
+                        button.classList.remove('loading');
+                        button.textContent = 'LOAD MORE';
+                        button.disabled = false;
+                        button.dataset.page = data.next_page;
+                    } else {
+                        // No more articles to load
+                        button.style.display = 'none';
+                        this.showEndMessage(newsGrid);
+                    }
+                    
+                    // Add animation to new items
+                    this.animateNewArticles(newsGrid);
+                } else {
+                    throw new Error(data.error || 'Failed to load articles');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading more articles:', error);
+                
+                // Reset button state on error
+                button.classList.remove('loading');
+                button.textContent = 'LOAD MORE';
+                button.disabled = false;
+                
+                // Show error message
+                this.showErrorMessage(newsGrid, 'Failed to load more articles. Please try again.');
+            });
+    }
+    
+    async fetchMoreArticles(category, page) {
+        try {
+            // Get CSRF token from cookies
+            const csrfToken = this.getCSRFToken();
             
-            // Reset button state
-            button.classList.remove('loading');
-            button.textContent = 'LOAD MORE';
-            button.disabled = false;
+            const response = await fetch(`/load-more-articles/?category=${encodeURIComponent(category)}&page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin'
+            });
             
-            // Check if we've reached the limit
-            const currentItems = newsGrid.querySelectorAll('.news-card');
-            if (currentItems.length >= 12) { // Example limit
-                button.style.display = 'none';
-                this.showEndMessage(newsGrid);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        }, 1000);
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching articles:', error);
+            throw error;
+        }
+    }
+    
+    getCSRFToken() {
+        // Try to get CSRF token from cookies
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return value;
+            }
+        }
+        
+        // Fallback: try to get from meta tag
+        const metaToken = document.querySelector('meta[name="csrf-token"]');
+        if (metaToken) {
+            return metaToken.getAttribute('content');
+        }
+        
+        return '';
+    }
+    
+    appendArticlesToGrid(newsGrid, html) {
+        // Create a temporary container to hold the new HTML
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = html;
+        
+        // Append each article to the grid
+        const newArticles = tempContainer.querySelectorAll('.news-card');
+        newArticles.forEach(article => {
+            newsGrid.appendChild(article);
+        });
+    }
+    
+    animateNewArticles(newsGrid) {
+        // Add animation to newly loaded articles
+        const allArticles = newsGrid.querySelectorAll('.news-card');
+        const newArticles = Array.from(allArticles).slice(-4); // Last 4 articles are new
+        
+        newArticles.forEach((article, index) => {
+            article.style.opacity = '0';
+            article.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                article.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                article.style.opacity = '1';
+                article.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }
+    
+    showErrorMessage(newsGrid, message) {
+        // Remove existing error messages
+        const existingError = newsGrid.parentNode.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            <p>⚠️ ${message}</p>
+            <button onclick="this.parentNode.remove()" class="btn btn-secondary">Dismiss</button>
+        `;
+        
+        newsGrid.parentNode.appendChild(errorDiv);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+            }
+        }, 5000);
     }
     
     addMoreNewsItems(newsGrid, category) {
-        // Sample news items to add
+        // Sample news items to add (fallback for demo purposes)
         const sampleNews = this.getSampleNews(category);
         
         sampleNews.forEach(newsItem => {
@@ -304,6 +424,12 @@ class CategoryManager {
     }
     
     initializeLoadMore() {
+        // Initialize load more buttons with page numbers
+        this.loadMoreBtns.forEach(btn => {
+            // Set initial page number (page 2 since page 1 is already loaded)
+            btn.dataset.page = '2';
+        });
+        
         // Add scroll-based load more functionality
         const loadMoreContainers = document.querySelectorAll('.category-content');
         

@@ -36,13 +36,13 @@ class Command(BaseCommand):
             {
                 'name': 'ESPN',
                 'url': 'https://www.espn.com/',
-                'category': 'General Sports',
+                'category': 'ESPN Sports',
                 'parser': self.parse_espn
             },
             {
                 'name': 'BBC Sports',
                 'url': 'https://www.bbc.com/sport',
-                'category': 'General Sports',
+                'category': 'BBC Sports',
                 'parser': self.parse_bbc_sports
             },
         ]
