@@ -1,5 +1,6 @@
 // Main JavaScript file for Newsprint website
 
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile menu functionality
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -13,29 +14,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Dropdown functionality
-    const dropdowns = document.querySelectorAll('.dropdown');
+    // const dropdowns = document.querySelectorAll('.dropdown');
     
-    dropdowns.forEach(dropdown => {
-        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+    // dropdowns.forEach(dropdown => {
+    //     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
         
-        // Show dropdown on hover
-        dropdown.addEventListener('mouseenter', function() {
-            if (dropdownMenu) {
-                dropdownMenu.style.opacity = '1';
-                dropdownMenu.style.visibility = 'visible';
-                dropdownMenu.style.transform = 'translateY(0)';
-            }
-        });
+    //     // Show dropdown on hover
+    //     dropdown.addEventListener('mouseenter', function() {
+    //         if (dropdownMenu) {
+    //             dropdownMenu.style.opacity = '1';
+    //             dropdownMenu.style.visibility = 'visible';
+    //             dropdownMenu.style.transform = 'translateY(0)';
+    //         }
+    //     });
         
-        // Hide dropdown on mouse leave
-        dropdown.addEventListener('mouseleave', function() {
-            if (dropdownMenu) {
-                dropdownMenu.style.opacity = '0';
-                dropdownMenu.style.visibility = 'hidden';
-                dropdownMenu.style.transform = 'translateY(-10px)';
-            }
-        });
-    });
+    //     // Hide dropdown on mouse leave
+    //     dropdown.addEventListener('mouseleave', function() {
+    //         if (dropdownMenu) {
+    //             dropdownMenu.style.opacity = '0';
+    //             dropdownMenu.style.visibility = 'hidden';
+    //             dropdownMenu.style.transform = 'translateY(-10px)';
+    //         }
+    //     });
+    // });
 
     // Search functionality
     const searchBtn = document.querySelector('.search-btn');

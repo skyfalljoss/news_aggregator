@@ -9,7 +9,6 @@ app_name = 'news'
 urlpatterns = [
     path('', views.index, name='index'),
     # Add the following lines
-    path('article/<int:article_id>/', views.article_detail, name='article_detail'),
     path('most-viewed/', views.most_viewed_list, name='most_viewed_list'),
     path('category/<str:category_name>/', views.category_list, name='category_list'),
     path('load-more-articles/', views.load_more_articles, name='load_more_articles'),

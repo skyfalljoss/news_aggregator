@@ -53,6 +53,8 @@ class CategoryManager {
                 
                 // Trigger content load if needed
                 this.loadCategoryContent(category);
+                // Reset load-more to correct next page for this category
+                this.resetLoadMore(category);
             } else {
                 content.classList.remove('active');
             }
@@ -190,6 +192,13 @@ class CategoryManager {
         const newArticles = tempContainer.querySelectorAll('.news-card');
         newArticles.forEach(article => {
             newsGrid.appendChild(article);
+            // Observe for scroll animation if available
+            if (this.cardObserver) {
+                this.cardObserver.observe(article);
+            } else {
+                // Fallback: ensure visibility
+                article.classList.add('animated');
+            }
         });
     }
     
@@ -275,104 +284,6 @@ class CategoryManager {
         return card;
     }
     
-    getSampleNews(category) {
-        const newsTemplates = {
-            cricket: [
-                {
-                    title: "New Cricket Tournament Announced for 2025",
-                    author: "Habib",
-                    date: "February 20, 2025",
-                    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
-                    category: "CRICKET"
-                },
-                {
-                    title: "Young Players Shine in Domestic League",
-                    author: "Habib",
-                    date: "February 19, 2025",
-                    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
-                    category: "CRICKET"
-                },
-                {
-                    title: "International Cricket Council Announces Rule Changes",
-                    author: "Habib",
-                    date: "February 18, 2025",
-                    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop",
-                    category: "CRICKET"
-                }
-            ],
-            football: [
-                {
-                    title: "Transfer Window: Major Deals Announced",
-                    author: "Habib",
-                    date: "February 20, 2025",
-                    image: "https://images.unsplash.com/photo-1552318965-6e6be7484ada?w=400&h=300&fit=crop",
-                    category: "FOOTBALL"
-                },
-                {
-                    title: "Champions League: Quarter-Final Draw Results",
-                    author: "Habib",
-                    date: "February 19, 2025",
-                    image: "https://images.unsplash.com/photo-1552318965-6e6be7484ada?w=400&h=300&fit=crop",
-                    category: "FOOTBALL"
-                },
-                {
-                    title: "National Team Prepares for World Cup Qualifiers",
-                    author: "Habib",
-                    date: "February 18, 2025",
-                    image: "https://images.unsplash.com/photo-1552318965-6e6be7484ada?w=400&h=300&fit=crop",
-                    category: "FOOTBALL"
-                }
-            ],
-            tennis: [
-                {
-                    title: "Grand Slam Season: Australian Open Highlights",
-                    author: "Habib",
-                    date: "February 20, 2025",
-                    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop",
-                    category: "TENNIS"
-                },
-                {
-                    title: "New Tennis Academy Opens in Major City",
-                    author: "Habib",
-                    date: "February 19, 2025",
-                    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop",
-                    category: "TENNIS"
-                },
-                {
-                    title: "Tennis Legends Return for Exhibition Match",
-                    author: "Habib",
-                    date: "February 18, 2025",
-                    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop",
-                    category: "TENNIS"
-                }
-            ],
-            boxing: [
-                {
-                    title: "Heavyweight Championship: Title Fight Announced",
-                    author: "Habib",
-                    date: "February 20, 2025",
-                    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop",
-                    category: "BOXING"
-                },
-                {
-                    title: "Boxing Hall of Fame: New Inductees Revealed",
-                    author: "Habib",
-                    date: "February 19, 2025",
-                    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop",
-                    category: "BOXING"
-                },
-                {
-                    title: "Amateur Boxing: National Championships Results",
-                    author: "Habib",
-                    date: "February 18, 2025",
-                    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop",
-                    category: "BOXING"
-                }
-            ]
-        };
-        
-        return newsTemplates[category] || [];
-    }
     
     showEndMessage(newsGrid) {
         const endMessage = document.createElement('div');
@@ -425,9 +336,13 @@ class CategoryManager {
     
     initializeLoadMore() {
         // Initialize load more buttons with page numbers
+        const perPage = 5; // Must match backend articles_per_page
         this.loadMoreBtns.forEach(btn => {
-            // Set initial page number (page 2 since page 1 is already loaded)
-            btn.dataset.page = '2';
+            const container = btn.closest('.category-content');
+            const grid = container ? container.querySelector('.news-grid') : null;
+            const alreadyLoaded = grid ? grid.querySelectorAll('.news-card').length : 0;
+            const startPage = Math.ceil(alreadyLoaded / perPage) + 1;
+            btn.dataset.page = String(startPage > 1 ? startPage : 2);
         });
         
         // Add scroll-based load more functionality
@@ -461,7 +376,7 @@ class CategoryManager {
         const newsCards = document.querySelectorAll('.news-card');
         
         if ('IntersectionObserver' in window) {
-            const cardObserver = new IntersectionObserver((entries) => {
+            this.cardObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('scroll-visible');
@@ -473,7 +388,7 @@ class CategoryManager {
             });
             
             newsCards.forEach(card => {
-                cardObserver.observe(card);
+                this.cardObserver.observe(card);
             });
         }
     }
@@ -495,6 +410,11 @@ class CategoryManager {
                 loadMoreBtn.style.display = 'block';
                 loadMoreBtn.disabled = false;
                 loadMoreBtn.textContent = 'LOAD MORE';
+                const perPage = 5; // Must match backend
+                const grid = contentContainer.querySelector('.news-grid');
+                const alreadyLoaded = grid ? grid.querySelectorAll('.news-card').length : 0;
+                const startPage = Math.ceil(alreadyLoaded / perPage) + 1;
+                loadMoreBtn.dataset.page = String(startPage > 1 ? startPage : 2);
             }
             
             // Remove end message if exists
@@ -536,149 +456,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add category-specific styles
-const categoryStyles = `
-    .category-content {
-        transition: opacity 0.3s ease;
-    }
-    
-    .category-content.loading {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-    
-    .category-content.loading::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #000;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    
-    .news-card {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .news-card.animated,
-    .news-card.scroll-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .load-more-btn.loading {
-        position: relative;
-        color: transparent;
-    }
-    
-    .load-more-btn.loading::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 16px;
-        height: 16px;
-        border: 2px solid transparent;
-        border-top: 2px solid currentColor;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    
-    .end-message {
-        text-align: center;
-        padding: 32px;
-        color: #6B7280;
-        background: #F9FAFB;
-        border-radius: 8px;
-        margin-top: 24px;
-    }
-    
-    .end-message p {
-        margin-bottom: 8px;
-    }
-    
-    .end-message p:last-child {
-        margin-bottom: 0;
-        font-size: 0.875rem;
-    }
-    
-    @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-    
-    /* Category tab animations */
-    .category-tab {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .category-tab::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 0;
-        height: 2px;
-        background: #000;
-        transition: all 0.3s ease;
-        transform: translateX(-50%);
-    }
-    
-    .category-tab.active::after,
-    .category-tab:hover::after {
-        width: 100%;
-    }
-    
-    /* News grid animations */
-    .news-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 24px;
-        margin-bottom: 32px;
-    }
-    
-    .news-card {
-        background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .news-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .category-tabs {
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .category-tab {
-            flex: 1;
-            min-width: 120px;
-            text-align: center;
-        }
-        
-        .news-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-`;
 
-// Inject category styles
-const categoryStyleSheet = document.createElement('style');
-categoryStyleSheet.textContent = categoryStyles;
-document.head.appendChild(categoryStyleSheet);
+// Inject category styles if provided globally
+try {
+    if (typeof categoryStyles === 'string' && categoryStyles.trim().length > 0) {
+        const categoryStyleSheet = document.createElement('style');
+        categoryStyleSheet.textContent = categoryStyles;
+        document.head.appendChild(categoryStyleSheet);
+    }
+} catch (e) {
+    // Silently ignore if categoryStyles is not defined
+}

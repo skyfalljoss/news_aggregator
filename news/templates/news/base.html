@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <title>{% block title %}Newsprint - Sports News{% endblock %}</title>
+    <title>{% block title %} Sports News{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -52,44 +52,54 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="{% url 'news:index' %}">Newsprint</a>
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <a href="{% url 'news:index' %}" class="text-2xl font-bold text-gray-900">Sky News</a>
                 </div>
-                <nav class="nav-primary">
-                    <ul>
-                        <li><a href="#demo">DEMO</a></li>
-                        <li><a href="#about">ABOUT US</a></li>
-                        <li class="dropdown">
-                            <a href="#pages">PAGES <span class="dropdown-arrow">▼</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#sports">Sports</a></li>
-                                <li><a href="#politics">Politics</a></li>
-                                <li><a href="#technology">Technology</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#contact">CONTACT US</a></li>
-                    </ul>
+
+                <nav class="hidden md:flex space-x-8 items-center">
+    
+                    <details class="relative group">
+                        <summary class="inline-flex items-center px-1 pt-1 border-b-2 border-black text-md font-bold text-gray-900 cursor-pointer list-none">
+                            Categories
+                        </summary>
+                        
+                        <ul class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1">
+                            {% for category_name, data in categorized_articles.items %}
+                                <li><button class="category-tab {% if forloop.first %}active{% endif %} !font-medium !text-gray-700"
+                                        data-category="{{ category_name|slugify }}">
+                                    {{ category_name }}
+                                </button></li>
+                            {% endfor %}
+                            {% comment %} <li><a href="#espn-sports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ESPN Sports</a></li>
+                            <li><a href="#bbc-sports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">BBC Sports</a></li>
+                            <li><a href="#general-sports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">General Sports</a></li> {% endcomment %}
+                        </ul>
+
+                       
+                    </details>
+                
+                    <a href="#contact" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-md font-bold text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact </a>
                 </nav>
-                <div class="header-actions">
-                    <button class="search-btn" aria-label="Search">
+
+                {% comment %} <div class="flex items-center">
+                    <button class="mr-4 text-gray-500 hover:text-gray-800" aria-label="Search">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
                     </button>
-                    <button class="mobile-menu-btn" aria-label="Menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                    <button class="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-100" aria-label="Menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                </div>
+                </div> {% endcomment %}
+
             </div>
         </div>
     </header>
-
     <!-- Main Content -->
     <main class="main-content">
         {% block content %}{% endblock %}
@@ -100,7 +110,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Newsprint</h3>
+                    <h3>Sky News</h3>
                     <p>Your trusted source for the latest sports news, analysis, and insights. Stay updated with breaking stories from around the world.</p>
                     <div class="social-links">
                         <a href="#" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
